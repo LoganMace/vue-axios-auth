@@ -69,6 +69,8 @@
 </template>
 
 <script>
+  import axios from 'axios';
+
   export default {
     data () {
       return {
@@ -101,8 +103,11 @@
           country: this.country,
           hobbies: this.hobbyInputs.map(hobby => hobby.value),
           terms: this.terms
-        }
-        console.log(formData)
+        };
+        console.log(formData);
+        axios.post('https://vue-max-course.firebaseio.com/users.json', formData)
+          .then(response => console.log(response))
+          .catch(err => console.log(err));
       }
     }
   }

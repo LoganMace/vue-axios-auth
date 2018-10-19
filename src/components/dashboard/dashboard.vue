@@ -14,3 +14,20 @@
     color: red;
   }
 </style>
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      email: ''
+    }
+  },
+  created() {
+    axios.get('https://vue-max-course.firebaseio.com/users.json')
+      .then(response => console.log(response.data))
+      .catch(err => console.log(err));
+  }
+}
+</script>
