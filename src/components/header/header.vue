@@ -14,7 +14,7 @@
         <li v-if="authed">
           <router-link to="/dashboard">Dashboard</router-link>
         </li>
-        <li>
+        <li v-if="authed">
           <button @click="onLogout" class="logout">Logout</button>
         </li>
       </ul>
@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     onLogout() {
-      
+      this.$store.dispatch('logout');
     }
   }
 }

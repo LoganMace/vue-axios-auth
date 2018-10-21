@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import axios from './axios-auth.js';
 import globalAxios from 'axios';
+import router from './router';
 
 import {aws} from './key';
 
@@ -41,6 +42,7 @@ export default new Vuex.Store({
           userId: response.data.localId
           });
           dispatch('storeUser', {authData});
+          router.replace('/dashboard');
         })
         .catch(err => console.log(err));
     },
@@ -56,11 +58,13 @@ export default new Vuex.Store({
           token: response.data.idToken,
           userId: response.data.localId
           });
+          router.replace('/dashboard');
         })
         .catch(err => console.log(err));
     },
     logout({commit}) {
-
+      commit('clearAuthData');
+      router.replace('/signin');
     },
     storeUser({commit, state}, userData) {
       if(!state.idToken){
