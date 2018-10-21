@@ -54,19 +54,28 @@
           <div class="hobby-list">
             <div
                     class="input"
+                    :class="{ invalid: $v.hobbyInputs.$each[index].$error }"
                     v-for="(hobbyInput, index) in hobbyInputs"
                     :key="hobbyInput.id">
               <label :for="hobbyInput.id">Hobby #{{ index }}</label>
               <input
                       type="text"
                       :id="hobbyInput.id"
+                      @blur="$v.hobbyInputs.$each[index].value.$touch()"
                       v-model="hobbyInput.value">
               <button @click="onDeleteHobby(hobbyInput.id)" type="button">X</button>
             </div>
+            <p v-if="!$v.hobbyInputs.minLen">You have to specify at least {{ $v.hobbyInputs.$params.minLen.min }} hobbies.</p>
+            <p v-if="!$v.hobbyInputs.required">Please add hobbies.</p>
           </div>
         </div>
-        <div class="input inline">
-          <input type="checkbox" id="terms" v-model="terms">
+        <div class="input inline" :class="{ invalid: $v.checkTerm.$invalid }">
+          <input 
+            type="checkbox" 
+            id="terms" 
+            @change="$v.checkTerm.$touch()"
+            v-model="terms">
+            <!-- <p>{{$v.checkTerm}}</p> -->
           <label for="terms">Accept Terms of Use</label>
         </div>
         <div class="submit">
@@ -78,7 +87,7 @@
 </template>
 
 <script>
-  import { required, email, numeric, minValue, minLength, sameAs } from 'vuelidate/lib/validators';
+  import { required, email, numeric, minValue, minLength, sameAs, requiredUnless } from 'vuelidate/lib/validators';
 
   export default {
     data () {
@@ -111,6 +120,22 @@
         // sameAs: sameAs((vm) => {
         //   return vm.password
         // })
+      },
+      checkTerm: {
+        // required: requiredUnless((vm) => {
+        //   return vm.country === 'germany'
+        // }),
+        // sameAs: sameAs(() => true)
+      },
+      hobbyInputs: {
+        required,
+        minLen: minLength(2),
+        $each: {
+          value: {
+            required,
+            minLen: minLength(5)
+          }
+        }
       }
     },
     methods: {
