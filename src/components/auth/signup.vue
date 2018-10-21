@@ -69,7 +69,6 @@
 </template>
 
 <script>
-  import axios from 'axios';
 
   export default {
     data () {
@@ -105,9 +104,7 @@
           terms: this.terms
         };
         console.log(formData);
-        axios.post('https://vue-max-course.firebaseio.com/users.json', formData)
-          .then(response => console.log(response))
-          .catch(err => console.log(err));
+        this.$store.dispatch('signup', formData);
       }
     }
   }
