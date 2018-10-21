@@ -29,6 +29,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setLogoutTimer({commit, dispatch}, expirationTime) {
+      setTimeout(() => {
+        dispatch('logout');
+      } , expirationTime * 1000);
+    },
     signup({commit, dispatch}, authData) {
       axios.post(`/signupNewUser?key=${aws}`, {
         email: authData.email,
@@ -42,11 +47,12 @@ export default new Vuex.Store({
           userId: response.data.localId
           });
           dispatch('storeUser', {authData});
+          dispatch('setLogoutTimer', response.data.expiresIn);
           router.replace('/dashboard');
         })
         .catch(err => console.log(err));
     },
-    login({commit}, authData) {
+    login({commit, dispatch}, authData) {
       axios.post(`/verifyPassword?key=${aws}`, {
         email: authData.email,
         password: authData.password,
@@ -58,6 +64,7 @@ export default new Vuex.Store({
           token: response.data.idToken,
           userId: response.data.localId
           });
+          dispatch('setLogoutTimer', response.data.expiresIn);
           router.replace('/dashboard');
         })
         .catch(err => console.log(err));
